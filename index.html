@@ -54,6 +54,55 @@
         .linlinma-logo { font-size: 35px; margin-bottom: 5px; }
         h1 { font-size: 1.8rem; color: var(--primary-orange); margin: 0; }
         
+        /* 規則按鈕 */
+        .rules-btn {
+            background-color: white;
+            color: var(--primary-orange);
+            border: 2px solid var(--primary-orange);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: 0.2s;
+        }
+
+        /* 規則彈窗樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 30px;
+            max-width: 320px;
+            position: relative;
+            border: 5px solid var(--primary-yellow);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; font-size: 22px; }
+        .modal-content ul { padding-left: 20px; line-height: 1.6; }
+        .modal-content li { margin-bottom: 10px; font-weight: 700; color: #666; }
+        .close-modal {
+            display: block;
+            margin: 20px auto 0;
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
         .name-input-area { margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .name-input-area label { font-size: 14px; font-weight: 700; color: #888; }
         #player-name { padding: 10px 20px; border-radius: 25px; border: 3px solid var(--primary-blue); font-size: 16px; font-weight: 900; text-align: center; color: var(--primary-blue); width: 200px; outline: none; }
@@ -70,33 +119,45 @@
 
         #grid-wrapper { background: white; padding: 15px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 5px solid #E1F5FE; margin-bottom: 20px; }
         #grid { 
-    display: grid; 
-    gap: 10px; 
-    grid-template-columns: repeat(3, 65px); 
-    grid-template-rows: repeat(3, 65px); 
-}
+            display: grid; 
+            gap: 10px; 
+            grid-template-columns: repeat(3, 65px); 
+            grid-template-rows: repeat(3, 65px); 
+        }
         .cell { width: 65px; height: 65px; background: #FFF; border: 4px solid var(--primary-yellow); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: 900; cursor: pointer; transition: 0.1s; }
         .cell.correct { background: var(--primary-green) !important; color: white !important; transform: scale(0.9); border-color: #66BB6A; }
         
         #start-btn { padding: 15px 40px; font-size: 22px; font-weight: 900; color: white; background: var(--primary-green); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 5px solid #66BB6A; }
-        #loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 999; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; color: var(--primary-orange); }
     </style>
 </head>
 <body>
 
-    <div id="loading-overlay">連線中...⏳</div>
+    <div class="modal-overlay" id="rules-modal">
+        <div class="modal-content">
+            <h3>遊戲規則與玩法</h3>
+            <ul>
+                <li><strong>視線集中：</strong> 眼睛盡量注視方格正中心，用餘光搜尋數字。</li>
+                <li><strong>依序點擊：</strong> 按照 1、2、3... 的順序快速點完。</li>
+                <li><strong>保持距離：</strong> 螢幕離眼睛約 30 公分，保護視力。</li>
+                <li><strong>玩法建議：</strong> 幼兒建議用單手食指訓練協調；大孩子可用雙手拇指挑戰極速左右腦開發！</li>
+            </ul>
+            <button class="close-modal" onclick="toggleRules(false)">我知道了！</button>
+        </div>
+    </div>
 
     <div class="header-container">
         <div class="linlinma-logo">⭐</div>
         <h1>林林媽的眼腦大挑戰</h1>
     </div>
 
+    <button class="rules-btn" onclick="toggleRules(true)">📖 遊戲規則說明</button>
+
     <div class="marquee-container">
         <div class="marquee-content" id="leaderboard-marquee">🏆 排行榜讀取中... 挑戰最速傳說！</div>
     </div>
 
     <div class="name-input-area">
-        <label>挑戰者暱稱 (可自由修改)：</label>
+        <label>挑戰者暱稱：</label>
         <input type="text" id="player-name" placeholder="輸入暱稱" maxlength="10">
     </div>
 
@@ -121,46 +182,39 @@
         let startTime, timerInterval, nextNumber = 1, isRunning = false;
         let gridSize = 3, maxNumber = 9, isHellMode = false;
         const hellColors = ['#E53935', '#1E88E5', '#43A047', '#FDD835', '#8E24AA', '#F4511E'];
-        
-        // 用來儲存所有等級排行榜的變數
         let allLeaderboards = null;
+
+        // 切換規則彈窗顯示
+        function toggleRules(show) {
+            document.getElementById('rules-modal').style.display = show ? 'flex' : 'none';
+        }
 
         async function init() {
             initGame();
             updateLeaderboard(); 
-            
             try {
                 await liff.init({ liffId: LIFF_ID });
                 if (liff.isLoggedIn()) {
                     const profile = await liff.getProfile();
                     lineUserId = profile.userId;
                     document.getElementById('player-name').value = profile.displayName;
-                } else {
-                    liff.login();
-                }
-            } catch (err) {
-                console.error("LIFF 初始化失敗", err);
-            }
+                } else { liff.login(); }
+            } catch (err) { console.error("LIFF 初始化失敗", err); }
         }
 
         async function updateLeaderboard() {
             try {
                 const response = await fetch(GAS_URL);
                 allLeaderboards = await response.json();
-                renderMarquee(); // 下載完畢後，根據當前等級渲染跑馬燈
+                renderMarquee();
             } catch (e) { console.error("無法載入排行榜", e); }
         }
 
-        // 獨立出一個渲染跑馬燈的功能，方便切換等級時呼叫
         function renderMarquee() {
             if (!allLeaderboards) return;
-            
             const marquee = document.getElementById('leaderboard-marquee');
-            // 抓出當前選中的等級名稱 (例如 "初級")
             const currentLevel = document.querySelector('.level-btn.active').textContent.split(' ')[0];
-            
             const levelData = allLeaderboards[currentLevel] || [];
-            
             if (levelData.length > 0) {
                 marquee.innerHTML = levelData.map((r, i) => `【${currentLevel} 第${i+1}名】${r.name}：${r.score}秒`).join(' &nbsp;&nbsp;🏆&nbsp;&nbsp; ');
             } else {
@@ -176,9 +230,8 @@
             else if (level === 'medium') { gridSize = 4; maxNumber = 16; }
             else { gridSize = 5; maxNumber = 25; }
             document.getElementById('grid').style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
-            
             initGame();
-            renderMarquee(); // 點擊按鈕切換等級時，同步切換跑馬燈！
+            renderMarquee();
         }
 
         function initGame() {
@@ -221,9 +274,7 @@
             const score = document.getElementById('timer').textContent;
             const name = document.getElementById('player-name').value || "匿名玩家";
             const level = document.querySelector('.level-btn.active').textContent.split(' ')[0];
-
             alert(`恭喜 ${name}！完成挑戰！\n成績：${score} 秒`);
-
             fetch(GAS_URL, {
                 method: 'POST',
                 body: JSON.stringify({ userId: lineUserId, userName: name, level: level, score: score })
