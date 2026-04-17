@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>林林媽的眼腦大挑戰 - 舒爾特方格</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* 品牌核心色調：活潑、溫暖、多樣 */
+            --primary-orange: #FF8A65;
+            --primary-yellow: #FFD54F;
+            --primary-blue: #4FC3F7;
+            --primary-green: #81C784;
+            --primary-purple: #BA68C8;
+            
+            --background-base: #FFFBF0; /* 極淡的鵝黃色，舒適眼睛 */
+            --background-grid: #E1F5FE; /* 淡淡的藍色網格區塊 */
+            --text-dark: #5D4037; /* 深咖啡色字體，比純黑溫柔 */
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', '微軟正黑體', sans-serif;
+            background-color: var(--background-base);
+            /* 加上淡淡的手繪貼紙質感背景 ( placeholder 用 SVG 代替，可自由移除 ) */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGRkUzQjIiIGZpbGwtb3BhY2l0eT0iMC4zIj48cGF0aCBkPSJNMCAwaDgvdjhIMHoiLz48cGF0aCBkPSJNOCA4aDh2OEg4eiIvPjxwYXRoIGQ9Ik0xNiAxNmguLjhIMTZ6Ii8+PHBhdGggZD0iTTI0IDI0aDh2OEgyNHoiLz48cGF0aCBkPSJNMzIgMzJoOHY4SDMyeiIvPjwvZz48L2c+PC9zdmc+');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 15px;
+            touch-action: manipulation;
+            margin: 0;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 標題與 Logo 區塊 */
+        .header-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* 林林媽 Q 版 Logo 預留區 */
+        .linlinma-logo-placeholder {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 0%, #FFEBCB 100%);
+            border: 4px solid var(--primary-yellow);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(255, 213, 79, 0.4);
+            font-size: 40px; /* Logo 圖示大小 */
+        }
+        /* 如果有真正的 Logo 圖檔，可用下面 CSS 替換星星 */
+        /* .linlinma-logo-placeholder img { width: 100%; height: 100%; object-fit: contain; } */
+
+        h1 { 
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-orange); 
+            margin: 0; 
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.7);
+        }
+        h2 { 
+            color: var(--text-dark); 
+            font-weight: 500;
+            font-size: 1.1rem; 
+            margin: 5px 0 15px 0; 
+            opacity: 0.8;
+        }
+        
+        /* 難度選擇區塊：升級為彩虹按鈕 */
+        .level-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0 15px;
+        }
+        .level-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 700;
+            border: 3px solid transparent;
+            background-color: white;
+            color: #555;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+            border-bottom: 5px solid rgba(0,0,0,0.1); /* 增加厚度感 */
+        }
+        
+        /* 為每個等級設定獨特彩虹色 */
+        .level-btn.level-easy { border-color: #A5D6A7; color: #2E7D32; }
+        .level-btn.level-medium { border-color: #90CAF9; color: #1565C0; }
+        .level-btn.level-hard { border-color: #CE93D8; color: #7B1FA2; }
+        .level-btn.level-hell { border-color: #EF9A9A; color: #C62828; }
+
+        .level-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 3px;
+        }
+
+        .level-btn.active {
+            color: white !important;
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            border-bottom-color: transparent;
+        }
+        .level-btn.level-easy.active { background-color: var(--primary-green); }
+        .level-btn.level-medium.active { background-color: var(--primary-blue); }
+        .level-btn.level-hard.active { background-color: var(--primary-purple); }
+        .level-btn.level-hell.active { background-color: var(--primary-orange); }
+
+        /* 計時資訊區塊 */
+        #info {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin-bottom: 25px;
+            background: white;
+            padding: 12px 35px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 3px solid var(--background-grid);
+        }
+
+        /* 網格盤面優化：增加彈性、質感 */
+        #grid-wrapper {
+            background-color: white;
+            padding: 20px;
+            border-radius: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 6px solid #FFF; /* 雙層白邊框 */
+            outline: 4px solid var(--background-grid); /* 最外層淡藍邊 */
+            margin-bottom: 20px;
+        }
+
+        #grid {
+            display: grid;
+            gap: 12px;
+            /* 預設 3x3 */
+            grid-template-columns: repeat(3, 68px);
+            grid-template-rows: repeat(3, 68px);
+        }
+
+        /* 方格優化：圓潤、有漸層、有重量感 (糖果按鈕感) */
+        .cell {
+            width: 68px;
+            height: 68px;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F0F0F0 100%);
+            border: 4px solid var(--primary-yellow);
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: #795548;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(255, 213, 79, 0.3), inset 0 2px 2px rgba(255,255,255,0.7);
+            user-select: none;
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-sizing: border-box; /* 確保邊框算在寬度內 */
+        }
+
+        /* 點擊時的「壓下去」回饋感 */
+        .cell:active {
+            transform: scale(0.92);
+            box-shadow: 0 2px 5px rgba(255, 213, 79, 0.2);
+            background: linear-gradient(145deg, #F0F0F0 0%, #FFFFFF 100%);
+        }
+
+        .cell.correct {
+            background: linear-gradient(145deg, #A5D6A7 0%, #C8E6C9 100%) !important;
+            border-color: #66BB6A;
+            color: #FFF !important;
+            transform: scale(0.85);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .cell.wrong {
+            background: linear-gradient(145deg, #EF9A9A 0%, #FFCDD2 100%) !important;
+            animation: shake 0.2s;
+            border-color: #C62828 !important;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(5px) rotate(1deg); }
+            50% { transform: translateX(-5px) rotate(-1deg); }
+            75% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* 開始按鈕優化：大顆、明顯 */
+        #start-btn {
+            margin-bottom: 30px;
+            padding: 18px 50px;
+            font-size: 24px;
+            font-weight: 900;
+            color: white;
+            background-color: var(--primary-green);
+            background-image: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.05) 100%);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(129, 199, 132, 0.5);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-bottom: 6px solid #66BB6A;
+        }
+        
+        #start-btn:active {
+            transform: translateY(3px) scale(0.98);
+            border-bottom-width: 3px;
+            box-shadow: 0 4px 10px rgba(129, 199, 132, 0.4);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="linlinma-logo-placeholder">
+            <span style="font-size: 45px; color: #FFD54F;">⭐</span>
+        </div>
+        <h1>林林媽的眼腦大挑戰</h1>
+        <h2>【舒爾特方格專注力訓練】</h2>
+    </div>
+
+    <div class="level-container">
+        <button class="level-btn level-easy active" onclick="setLevel('easy', this)">初級 3x3</button>
+        <button class="level-btn level-medium" onclick="setLevel('medium', this)">中級 4x4</button>
+        <button class="level-btn level-hard" onclick="setLevel('hard', this)">高級 5x5</button>
+        <button class="level-btn level-hell" onclick="setLevel('hell', this)">地獄級</button>
+    </div>
+    
+    <div id="info">時間：<span id="timer">0.00</span> 秒</div>
+    
+    <div id="grid-wrapper">
+        <div id="grid"></div>
+    </div>
+
+    <button id="start-btn" onclick="startGame()">開始挑戰！</button>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('start-btn');
+        
+        let startTime;
+        let timerInterval;
+        let nextNumber = 1;
+        let isRunning = false;
+        
+        // 遊戲設定參數
+        let gridSize = 3;
+        let maxNumber = 9;
+        let isHellMode = false;
+
+        // 地獄級的干擾顏色庫 (更鮮豔、更強烈的地獄配色)
+        const hellColors = ['#E53935', '#1E88E5', '#43A047', '#FDD835', '#8E24AA', '#F4511E', '#00ACC1', '#D81B60', '#FF1744'];
+
+        // 切換難度
+        function setLevel(level, btnElement) {
+            // 重置按鈕外觀
+            document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // 停止當前遊戲與計時
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.disabled = false;
+            startBtn.style.opacity = '1';
+            startBtn.textContent = '開始挑戰！';
+            timerDisplay.textContent = '0.00';
+
+            // 設定對應參數
+            isHellMode = false;
+            if (level === 'easy') { gridSize = 3; maxNumber = 9; }
+            else if (level === 'medium') { gridSize = 4; maxNumber = 16; }
+            else if (level === 'hard') { gridSize = 5; maxNumber = 25; }
+            else if (level === 'hell') { gridSize = 5; maxNumber = 25; isHellMode = true; }
+
+            // 調整網格 CSS，配合新的 wrapper 結構
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 68px)`;
+            grid.style.gridTemplateRows = `repeat(${gridSize}, 68px)`;
+
+            initGame();
+        }
+
+        // 洗牌算法
+        function shuffleNumbers() {
+            let nums = Array.from({length: maxNumber}, (_, i) => i + 1);
+            for (let i = nums.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [nums[i], nums[j]] = [nums[j], nums[i]];
+            }
+            return nums;
+        }
+
+        // 初始化遊戲盤面
+        function initGame() {
+            grid.innerHTML = '';
+            const numbers = shuffleNumbers();
+            
+            numbers.forEach(num => {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = num;
+                
+                // 地獄級：隨機改變字體顏色與字體大小微調
+                if (isHellMode) {
+                    const randomColor = hellColors[Math.floor(Math.random() * hellColors.length)];
+                    cell.style.color = randomColor;
+                    // 微調地獄級的字體大小，增加辨識難度
+                    cell.style.fontSize = Math.random() > 0.5 ? '34px' : '28px';
+                    // 地獄級邊框也可以跟著變
+                    cell.style.borderColor = randomColor;
+                } else {
+                    // 非地獄級，保持預設
+                    cell.style.color = ''; 
+                    cell.style.fontSize = '';
+                    cell.style.borderColor = '';
+                }
+
+                cell.addEventListener('click', () => handleCellClick(cell, num));
+                grid.appendChild(cell);
+            });
+        }
+
+        // 處理點擊邏輯
+        function handleCellClick(cell, num) {
+            // 遊戲沒在跑，點了沒反應
+            if (!isRunning) return;
+
+            if (num === nextNumber) {
+                // 點對了
+                cell.classList.add('correct');
+                cell.style.pointerEvents = 'none'; // 防止重複點擊
+                nextNumber++;
+
+                if (nextNumber > maxNumber) {
+                    // 點到最後一格，過關
+                    endGame();
+                }
+            } else {
+                // 點錯了
+                cell.classList.add('wrong');
+                setTimeout(() => cell.classList.remove('wrong'), 200);
+            }
+        }
+
+        // 開始遊戲
+        function startGame() {
+            nextNumber = 1;
+            isRunning = true;
+            initGame(); // 每次開始都重新隨機生成
+            startTime = Date.now();
+            startBtn.disabled = true;
+            startBtn.style.opacity = '0.5';
+            startBtn.textContent = '專注尋找中...';
+            
+            // 每 10 毫秒更新一次計時器 (呈現到兩位小數)
+            timerInterval = setInterval(() => {
+                const elapsedTime = (Date.now() - startTime) / 1000;
+                timerDisplay.textContent = elapsedTime.toFixed(2);
+            }, 10);
+        }
+
+        // 遊戲結束
+        function endGame() {
+            clearInterval(timerInterval); // 停止碼錶
+            isRunning = false;
+            startBtn.disabled = false;
+            startBtn.style.opacity = '1';
+            startBtn.textContent = '挑戰成功！再玩一次？';
+            
+            // 根據不同難度給予獎勵提示 (未來可在此串接集點邏輯)
+            let levelName = document.querySelector('.level-btn.active').textContent;
+            let currentRecord = timerDisplay.textContent;
+
+            // 稍微延遲彈出，確保最後一格的點擊動畫完成
+            setTimeout(() => {
+                let encourageText = '';
+                if(isHellMode) introduce = "地獄級太猛了！這簡直是神人的眼力！🔥";
+                else if(gridSize === 5) encourageText = "太棒了！高級挑戰成功！專注力 up up！⭐";
+                else encourageText = "挑戰完成！再試試更難的吧！👍";
+                
+                alert(`${encourageText}\n耗時：${currentRecord} 秒\n(這台手機的最高紀錄：請期待未來集點功能串接！)`);
+            }, 150); 
+        }
+
+        // 預設載入初級盤面
+        initGame();
+    </script>
+</body>
+</html>
