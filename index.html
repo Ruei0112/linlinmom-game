@@ -29,7 +29,6 @@
             touch-action: manipulation;
         }
 
-        /* 排行榜跑馬燈 */
         .marquee-container {
             width: 90%;
             max-width: 400px;
@@ -51,33 +50,14 @@
         }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* 標題區 */
         .header-container { text-align: center; margin-bottom: 10px; }
         .linlinma-logo { font-size: 35px; margin-bottom: 5px; }
         h1 { font-size: 1.8rem; color: var(--primary-orange); margin: 0; }
         
-        /* 姓名輸入區：新增功能 */
-        .name-input-area {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
+        .name-input-area { margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .name-input-area label { font-size: 14px; font-weight: 700; color: #888; }
-        #player-name {
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: 3px solid var(--primary-blue);
-            font-size: 16px;
-            font-weight: 900;
-            text-align: center;
-            color: var(--primary-blue);
-            width: 200px;
-            outline: none;
-        }
+        #player-name { padding: 10px 20px; border-radius: 25px; border: 3px solid var(--primary-blue); font-size: 16px; font-weight: 900; text-align: center; color: var(--primary-blue); width: 200px; outline: none; }
 
-        /* 難度與計時 */
         .level-container { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; }
         .level-btn { padding: 8px 16px; border-radius: 30px; border: 3px solid #EEE; background: white; cursor: pointer; font-weight: 700; transition: 0.2s; }
         .level-btn.active { color: white; transform: scale(1.05); }
@@ -88,7 +68,6 @@
 
         #info { font-size: 24px; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; }
 
-        /* 網格盤面 */
         #grid-wrapper { background: white; padding: 15px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 5px solid #E1F5FE; margin-bottom: 20px; }
         #grid { display: grid; gap: 10px; }
         .cell { width: 65px; height: 65px; background: #FFF; border: 4px solid var(--primary-yellow); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: 900; cursor: pointer; transition: 0.1s; }
@@ -130,7 +109,6 @@
     <button id="start-btn" onclick="startGame()">開始挑戰！</button>
 
     <script>
-        // --- 核心變數與配置 ---
         const GAS_URL = "https://script.google.com/macros/s/AKfycbywKvXLB3tELoxhzyFmAbrI4pE2xhWdnkPE18FB7McvbM-YyXL-ALHeF2K2fm86DM5d/exec"; 
         const LIFF_ID = "2009821091-tQJWO27I";
 
@@ -138,13 +116,14 @@
         let startTime, timerInterval, nextNumber = 1, isRunning = false;
         let gridSize = 3, maxNumber = 9, isHellMode = false;
         const hellColors = ['#E53935', '#1E88E5', '#43A047', '#FDD835', '#8E24AA', '#F4511E'];
+        
+        // 用來儲存所有等級排行榜的變數
+        let allLeaderboards = null;
 
-        // --- 1. 初始化與數據抓取 ---
         async function init() {
             initGame();
-            updateLeaderboard(); // 抓取排行榜
+            updateLeaderboard(); 
             
-            // 直接執行 LIFF 初始化，移除防呆阻擋
             try {
                 await liff.init({ liffId: LIFF_ID });
                 if (liff.isLoggedIn()) {
@@ -160,18 +139,30 @@
         }
 
         async function updateLeaderboard() {
-            // 直接抓取 GAS 數據，移除防呆阻擋
             try {
                 const response = await fetch(GAS_URL);
-                const data = await response.json();
-                const marquee = document.getElementById('leaderboard-marquee');
-                if (data.length > 0) {
-                    marquee.innerHTML = data.map((r, i) => `【第${i+1}名】${r.name} - ${r.level}：${r.score}秒`).join(' 🏆 ');
-                }
+                allLeaderboards = await response.json();
+                renderMarquee(); // 下載完畢後，根據當前等級渲染跑馬燈
             } catch (e) { console.error("無法載入排行榜", e); }
         }
 
-        // --- 2. 遊戲核心邏輯 ---
+        // 獨立出一個渲染跑馬燈的功能，方便切換等級時呼叫
+        function renderMarquee() {
+            if (!allLeaderboards) return;
+            
+            const marquee = document.getElementById('leaderboard-marquee');
+            // 抓出當前選中的等級名稱 (例如 "初級")
+            const currentLevel = document.querySelector('.level-btn.active').textContent.split(' ')[0];
+            
+            const levelData = allLeaderboards[currentLevel] || [];
+            
+            if (levelData.length > 0) {
+                marquee.innerHTML = levelData.map((r, i) => `【${currentLevel} 第${i+1}名】${r.name}：${r.score}秒`).join(' &nbsp;&nbsp;🏆&nbsp;&nbsp; ');
+            } else {
+                marquee.innerHTML = `🏆 目前【${currentLevel}】還沒有人挑戰，快來搶下第一名！`;
+            }
+        }
+
         function setLevel(level, btn) {
             document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
@@ -180,7 +171,9 @@
             else if (level === 'medium') { gridSize = 4; maxNumber = 16; }
             else { gridSize = 5; maxNumber = 25; }
             document.getElementById('grid').style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
+            
             initGame();
+            renderMarquee(); // 點擊按鈕切換等級時，同步切換跑馬燈！
         }
 
         function initGame() {
@@ -226,7 +219,6 @@
 
             alert(`恭喜 ${name}！完成挑戰！\n成績：${score} 秒`);
 
-            // 直接傳送成績到 Google 試算表，移除防呆阻擋
             fetch(GAS_URL, {
                 method: 'POST',
                 body: JSON.stringify({ userId: lineUserId, userName: name, level: level, score: score })
