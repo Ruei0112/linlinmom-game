@@ -15,6 +15,7 @@
             --primary-purple: #BA68C8;
             --background-base: #FFFBF0;
             --text-dark: #5D4037;
+            --danger-red: #FF5252;
         }
 
         body {
@@ -54,57 +55,26 @@
         .linlinma-logo { font-size: 35px; margin-bottom: 5px; }
         h1 { font-size: 1.8rem; color: var(--primary-orange); margin: 0; }
         
-        /* 規則按鈕 */
         .rules-btn {
-            background-color: white;
-            color: var(--primary-orange);
-            border: 2px solid var(--primary-orange);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 15px;
-            transition: 0.2s;
+            background-color: white; color: var(--primary-orange); border: 2px solid var(--primary-orange);
+            padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 15px;
         }
 
-        /* 規則彈窗樣式 */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 1000; justify-content: center; align-items: center; padding: 20px;
         }
         .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 30px;
-            max-width: 320px;
-            position: relative;
-            border: 5px solid var(--primary-yellow);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: white; padding: 25px; border-radius: 30px; max-width: 320px;
+            border: 5px solid var(--primary-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; font-size: 22px; }
-        .modal-content ul { padding-left: 20px; line-height: 1.6; }
-        .modal-content li { margin-bottom: 10px; font-weight: 700; color: #666; }
+        .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; }
         .close-modal {
-            display: block;
-            margin: 20px auto 0;
-            background: var(--primary-orange);
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-weight: 900;
-            cursor: pointer;
+            display: block; margin: 20px auto 0; background: var(--primary-orange);
+            color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: 900;
         }
 
         .name-input-area { margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .name-input-area label { font-size: 14px; font-weight: 700; color: #888; }
         #player-name { padding: 10px 20px; border-radius: 25px; border: 3px solid var(--primary-blue); font-size: 16px; font-weight: 900; text-align: center; color: var(--primary-blue); width: 200px; outline: none; }
 
         .level-container { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; }
@@ -115,14 +85,20 @@
         .level-btn.level-hard.active { background: var(--primary-purple); border-color: var(--primary-purple); }
         .level-btn.level-hell.active { background: var(--primary-orange); border-color: var(--primary-orange); }
 
-        #info { font-size: 24px; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; }
+        /* 計時器樣式 */
+        #info { font-size: 28px; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; transition: color 0.3s; }
+        #info.warning { color: var(--danger-red); animation: pulse 0.5s infinite; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
         #grid-wrapper { background: white; padding: 15px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 5px solid #E1F5FE; margin-bottom: 20px; }
         #grid { 
-            display: grid; 
-            gap: 10px; 
-            grid-template-columns: repeat(3, 65px); 
-            grid-template-rows: repeat(3, 65px); 
+            display: grid; gap: 10px; 
+            grid-template-columns: repeat(3, 65px); grid-template-rows: repeat(3, 65px); 
         }
         .cell { width: 65px; height: 65px; background: #FFF; border: 4px solid var(--primary-yellow); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: 900; cursor: pointer; transition: 0.1s; }
         .cell.correct { background: var(--primary-green) !important; color: white !important; transform: scale(0.9); border-color: #66BB6A; }
@@ -136,11 +112,10 @@
         <div class="modal-content">
             <h3>遊戲規則與玩法</h3>
             <ul>
-                <li><strong>視線集中：</strong> 眼睛盡量注視方格正中心，用餘光搜尋數字。</li>
-                <li><strong>依序點擊：</strong> 按照 1、2、3... 的順序快速點完。</li>
-                <li><strong>保持距離：</strong> 螢幕離眼睛約 30 公分，保護視力。</li>
-                <li><strong>玩法建議：</strong> 第一種：【單手食指點擊】（推薦給 6~9 歲，或專注力較弱的孩子）
-第二種：【雙手大拇指連擊】（推薦給 10~16 歲，或追求極速的高年級生）</li>
+                <li><strong>限時挑戰：</strong> 在倒數結束前依序點完所有數字！</li>
+                <li><strong>視線集中：</strong> 眼睛注視中心，用餘光搜尋數字。</li>
+                <li><strong>依序點擊：</strong> 按照 1、2、3... 的順序點擊。</li>
+                <li><strong>最後警告：</strong> 剩下 10 秒時，計時器會變紅跳動喔！</li>
             </ul>
             <button class="close-modal" onclick="toggleRules(false)">我知道了！</button>
         </div>
@@ -154,11 +129,11 @@
     <button class="rules-btn" onclick="toggleRules(true)">📖 遊戲規則說明</button>
 
     <div class="marquee-container">
-        <div class="marquee-content" id="leaderboard-marquee">🏆 排行榜讀取中... 挑戰最速傳說！</div>
+        <div class="marquee-content" id="leaderboard-marquee">🏆 排行榜讀取中...</div>
     </div>
 
     <div class="name-input-area">
-        <label>挑戰者暱稱：</label>
+        <label style="font-size:14px; font-weight:700; color:#888;">挑戰者暱稱：</label>
         <input type="text" id="player-name" placeholder="輸入暱稱" maxlength="10">
     </div>
 
@@ -169,7 +144,7 @@
         <button class="level-btn level-hell" onclick="setLevel('hell', this)">地獄級</button>
     </div>
     
-    <div id="info">時間：<span id="timer">0.00</span> 秒</div>
+    <div id="info">剩餘時間：<span id="timer">15.00</span> 秒</div>
     
     <div id="grid-wrapper"><div id="grid"></div></div>
 
@@ -182,13 +157,10 @@
         let lineUserId = "Guest";
         let startTime, timerInterval, nextNumber = 1, isRunning = false;
         let gridSize = 3, maxNumber = 9, isHellMode = false;
-        const hellColors = ['#E53935', '#1E88E5', '#43A047', '#FDD835', '#8E24AA', '#F4511E'];
+        let initialTime = 15; // 預設初級 15 秒
         let allLeaderboards = null;
 
-        // 切換規則彈窗顯示
-        function toggleRules(show) {
-            document.getElementById('rules-modal').style.display = show ? 'flex' : 'none';
-        }
+        function toggleRules(show) { document.getElementById('rules-modal').style.display = show ? 'flex' : 'none'; }
 
         async function init() {
             initGame();
@@ -227,9 +199,16 @@
             document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             isHellMode = (level === 'hell');
-            if (level === 'easy') { gridSize = 3; maxNumber = 9; }
-            else if (level === 'medium') { gridSize = 4; maxNumber = 16; }
-            else { gridSize = 5; maxNumber = 25; }
+            
+            const infoBox = document.getElementById('info');
+            infoBox.classList.remove('warning');
+
+            if (level === 'easy') { gridSize = 3; maxNumber = 9; initialTime = 15; }
+            else if (level === 'medium') { gridSize = 4; maxNumber = 16; initialTime = 25; }
+            else if (level === 'hard') { gridSize = 5; maxNumber = 25; initialTime = 40; }
+            else if (level === 'hell') { gridSize = 5; maxNumber = 25; initialTime = 30; isHellMode = true; }
+            
+            document.getElementById('timer').textContent = initialTime.toFixed(2);
             document.getElementById('grid').style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
             initGame();
             renderMarquee();
@@ -244,6 +223,7 @@
                 cell.className = 'cell';
                 cell.textContent = num;
                 if (isHellMode) {
+                    const hellColors = ['#E53935', '#1E88E5', '#43A047', '#FDD835', '#8E24AA', '#F4511E'];
                     const c = hellColors[Math.floor(Math.random() * hellColors.length)];
                     cell.style.color = c; cell.style.borderColor = c;
                 }
@@ -252,7 +232,7 @@
                     if (num === nextNumber) {
                         cell.classList.add('correct');
                         nextNumber++;
-                        if (nextNumber > maxNumber) endGame();
+                        if (nextNumber > maxNumber) endGame(true);
                     }
                 };
                 grid.appendChild(cell);
@@ -263,23 +243,43 @@
             nextNumber = 1; isRunning = true; initGame();
             startTime = Date.now();
             document.getElementById('start-btn').disabled = true;
+            document.getElementById('info').classList.remove('warning');
+            
             timerInterval = setInterval(() => {
-                document.getElementById('timer').textContent = ((Date.now() - startTime) / 1000).toFixed(2);
+                const elapsed = (Date.now() - startTime) / 1000;
+                const remaining = initialTime - elapsed;
+                
+                if (remaining <= 0) {
+                    document.getElementById('timer').textContent = "0.00";
+                    endGame(false);
+                } else {
+                    document.getElementById('timer').textContent = remaining.toFixed(2);
+                    if (remaining <= 10) {
+                        document.getElementById('info').classList.add('warning');
+                    }
+                }
             }, 10);
         }
 
-        async function endGame() {
+        async function endGame(isSuccess) {
             clearInterval(timerInterval);
             isRunning = false;
             document.getElementById('start-btn').disabled = false;
-            const score = document.getElementById('timer').textContent;
-            const name = document.getElementById('player-name').value || "匿名玩家";
-            const level = document.querySelector('.level-btn.active').textContent.split(' ')[0];
-            alert(`恭喜 ${name}！完成挑戰！\n成績：${score} 秒`);
-            fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify({ userId: lineUserId, userName: name, level: level, score: score })
-            }).then(() => updateLeaderboard());
+            
+            if (isSuccess) {
+                const timeUsed = (initialTime - parseFloat(document.getElementById('timer').textContent)).toFixed(2);
+                const name = document.getElementById('player-name').value || "匿名玩家";
+                const level = document.querySelector('.level-btn.active').textContent.split(' ')[0];
+                
+                alert(`恭喜 ${name}！挑戰成功！\n用時：${timeUsed} 秒`);
+                
+                fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ userId: lineUserId, userName: name, level: level, score: timeUsed })
+                }).then(() => updateLeaderboard());
+            } else {
+                alert("太可惜了！時間到，挑戰失敗。\n別灰心，再試一次吧！");
+            }
         }
 
         init();
