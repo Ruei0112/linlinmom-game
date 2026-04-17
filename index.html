@@ -55,24 +55,45 @@
         .linlinma-logo { font-size: 35px; margin-bottom: 5px; }
         h1 { font-size: 1.8rem; color: var(--primary-orange); margin: 0; }
         
-        .rules-btn {
-            background-color: white; color: var(--primary-orange); border: 2px solid var(--primary-orange);
-            padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 15px;
+        /* 頂部按鈕區塊 */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
+        .btn-small {
+            background-color: white; color: var(--primary-orange); border: 2px solid var(--primary-orange);
+            padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .btn-small:active { transform: scale(0.95); }
 
+        /* 彈窗共通樣式 */
         .modal-overlay {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
             z-index: 1000; justify-content: center; align-items: center; padding: 20px;
         }
         .modal-content {
-            background: white; padding: 25px; border-radius: 30px; max-width: 320px;
+            background: white; padding: 25px; border-radius: 30px; max-width: 320px; width: 100%;
             border: 5px solid var(--primary-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-sizing: border-box;
         }
-        .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; }
+        .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; margin-bottom: 15px; }
         .close-modal {
             display: block; margin: 20px auto 0; background: var(--primary-orange);
             color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: 900;
+            cursor: pointer; transition: 0.2s;
         }
+        .close-modal:active { transform: scale(0.95); }
+
+        /* 規則彈窗特定樣式 */
+        #rules-modal ul { padding-left: 20px; line-height: 1.6; margin-bottom: 0; }
+        #rules-modal li { margin-bottom: 10px; font-weight: 700; color: #666; }
+
+        /* 評級彈窗特定樣式 */
+        .eval-section { margin-bottom: 15px; background: #FFFBF0; padding: 10px 15px; border-radius: 15px; border-left: 4px solid var(--primary-orange); }
+        .eval-section h4 { margin: 0 0 5px 0; color: var(--primary-blue); font-size: 16px; }
+        .eval-section p { margin: 0; font-size: 13px; font-weight: 700; color: #666; line-height: 1.5; }
+        .eval-highlight { color: var(--primary-orange); }
 
         .name-input-area { margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         #player-name { padding: 10px 20px; border-radius: 25px; border: 3px solid var(--primary-blue); font-size: 16px; font-weight: 900; text-align: center; color: var(--primary-blue); width: 200px; outline: none; }
@@ -85,7 +106,6 @@
         .level-btn.level-hard.active { background: var(--primary-purple); border-color: var(--primary-purple); }
         .level-btn.level-hell.active { background: var(--primary-orange); border-color: var(--primary-orange); }
 
-        /* 計時器樣式 */
         #info { font-size: 28px; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; transition: color 0.3s; }
         #info.warning { color: var(--danger-red); animation: pulse 0.5s infinite; }
         
@@ -115,10 +135,39 @@
                 <li><strong>限時挑戰：</strong> 在倒數結束前依序點完所有數字！</li>
                 <li><strong>視線集中：</strong> 眼睛盡量注視方格正中心，用餘光搜尋數字。</li>
                 <li><strong>依序點擊：</strong> 按照 1、2、3... 的順序點擊。</li>
-                <li><strong>最後警告：</strong> 剩下 10 秒時，計時器會變紅跳動喔！</li>
                 <li><strong>玩法建議：</strong> 第一種：【單手食指點擊】（推薦給 6~9 歲，或專注力較弱的孩子）；第二種：【雙手大拇指連擊】（推薦給 10~16 歲，或追求極速的高年級生）</li>
             </ul>
             <button class="close-modal" onclick="toggleRules(false)">我知道了！</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="eval-modal">
+        <div class="modal-content">
+            <h3>🏆 大腦轉速評級表</h3>
+            
+            <div class="eval-section">
+                <h4>初級 3x3</h4>
+                <p>5秒內：<span class="eval-highlight">神級反應</span><br>
+                10秒內：<span class="eval-highlight">眼明手快</span><br>
+                10秒以上：繼續加油</p>
+            </div>
+
+            <div class="eval-section">
+                <h4>中級 4x4</h4>
+                <p>12秒內：<span class="eval-highlight">頂尖大腦</span><br>
+                20秒內：<span class="eval-highlight">專注達人</span><br>
+                20秒以上：潛力玩家</p>
+            </div>
+
+            <div class="eval-section">
+                <h4>高級 / 地獄 5x5</h4>
+                <p>20秒內：<span class="eval-highlight">神級大腦</span><br>
+                30秒內：<span class="eval-highlight">眼腦精英</span><br>
+                40秒內：<span class="eval-highlight">專注達人</span><br>
+                40秒以上：潛力玩家</p>
+            </div>
+
+            <button class="close-modal" onclick="toggleEval(false)">設定好目標了！</button>
         </div>
     </div>
 
@@ -127,7 +176,10 @@
         <h1>林林媽的眼腦大挑戰</h1>
     </div>
 
-    <button class="rules-btn" onclick="toggleRules(true)">📖 遊戲規則說明</button>
+    <div class="action-buttons">
+        <button class="btn-small" onclick="toggleRules(true)">📖 規則說明</button>
+        <button class="btn-small" onclick="toggleEval(true)">🏆 評級標準</button>
+    </div>
 
     <div class="marquee-container">
         <div class="marquee-content" id="leaderboard-marquee">🏆 排行榜讀取中...</div>
@@ -158,10 +210,11 @@
         let lineUserId = "Guest";
         let startTime, timerInterval, nextNumber = 1, isRunning = false;
         let gridSize = 3, maxNumber = 9, isHellMode = false;
-        let initialTime = 15; // 預設初級 15 秒
+        let initialTime = 15;
         let allLeaderboards = null;
 
         function toggleRules(show) { document.getElementById('rules-modal').style.display = show ? 'flex' : 'none'; }
+        function toggleEval(show) { document.getElementById('eval-modal').style.display = show ? 'flex' : 'none'; }
 
         async function init() {
             initGame();
@@ -200,15 +253,12 @@
             document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             isHellMode = (level === 'hell');
-            
             const infoBox = document.getElementById('info');
             infoBox.classList.remove('warning');
-
             if (level === 'easy') { gridSize = 3; maxNumber = 9; initialTime = 15; }
             else if (level === 'medium') { gridSize = 4; maxNumber = 16; initialTime = 25; }
             else if (level === 'hard') { gridSize = 5; maxNumber = 25; initialTime = 40; }
             else if (level === 'hell') { gridSize = 5; maxNumber = 25; initialTime = 30; isHellMode = true; }
-            
             document.getElementById('timer').textContent = initialTime.toFixed(2);
             document.getElementById('grid').style.gridTemplateColumns = `repeat(${gridSize}, 65px)`;
             initGame();
@@ -245,34 +295,48 @@
             startTime = Date.now();
             document.getElementById('start-btn').disabled = true;
             document.getElementById('info').classList.remove('warning');
-            
             timerInterval = setInterval(() => {
                 const elapsed = (Date.now() - startTime) / 1000;
                 const remaining = initialTime - elapsed;
-                
                 if (remaining <= 0) {
                     document.getElementById('timer').textContent = "0.00";
                     endGame(false);
                 } else {
                     document.getElementById('timer').textContent = remaining.toFixed(2);
-                    if (remaining <= 10) {
-                        document.getElementById('info').classList.add('warning');
-                    }
+                    if (remaining <= 10) document.getElementById('info').classList.add('warning');
                 }
             }, 10);
+        }
+
+        function getEvaluation(score, levelName) {
+            score = parseFloat(score);
+            if (levelName === "初級") {
+                if (score < 5) return "【神級反應】你是未來的超級天才！";
+                if (score < 10) return "【眼明手快】專注力像雷射光一樣準！";
+                return "【繼續加油】試著注視中心，大腦會更靈光喔！";
+            }
+            if (levelName === "中級") {
+                if (score < 12) return "【頂尖大腦】這轉速太瘋狂了！";
+                if (score < 20) return "【專注達人】表現非常優秀穩定！";
+                return "【潛力玩家】再練幾次就能衝進精英區！";
+            }
+            if (score < 20) return "【神級大腦】天啊！具備飛行員等級的視覺廣度！";
+            if (score < 30) return "【眼腦精英】專注力抓得死死的，太專業了！";
+            if (score < 40) return "【專注達人】大腦引擎完全發動，效率極高！";
+            return "【潛力玩家】成功挑戰！每天三次，練出最強大腦！";
         }
 
         async function endGame(isSuccess) {
             clearInterval(timerInterval);
             isRunning = false;
             document.getElementById('start-btn').disabled = false;
-            
             if (isSuccess) {
                 const timeUsed = (initialTime - parseFloat(document.getElementById('timer').textContent)).toFixed(2);
                 const name = document.getElementById('player-name').value || "匿名玩家";
                 const level = document.querySelector('.level-btn.active').textContent.split(' ')[0];
+                const evaluation = getEvaluation(timeUsed, level);
                 
-                alert(`恭喜 ${name}！挑戰成功！\n用時：${timeUsed} 秒`);
+                alert(`恭喜 ${name}！挑戰成功！\n用時：${timeUsed} 秒\n\n評級：${evaluation}`);
                 
                 fetch(GAS_URL, {
                     method: 'POST',
@@ -282,7 +346,6 @@
                 alert("太可惜了！時間到，挑戰失敗。\n別灰心，再試一次吧！");
             }
         }
-
         init();
     </script>
 </body>
