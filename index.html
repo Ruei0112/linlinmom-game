@@ -25,9 +25,11 @@
         .header-container { text-align: center; margin-bottom: 10px; }
         .linlinma-logo { font-size: 35px; margin-bottom: 5px; }
         h1 { font-size: 1.8rem; color: var(--primary-orange); margin: 0; }
+        
         .action-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
         .btn-small { background-color: white; color: var(--primary-orange); border: 2px solid var(--primary-orange); padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-small:active { transform: scale(0.95); }
+
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: white; padding: 25px; border-radius: 30px; max-width: 320px; width: 100%; border: 5px solid var(--primary-yellow); box-shadow: 0 10px 25px rgba(0,0,0,0.2); box-sizing: border-box; }
         .modal-content h3 { color: var(--primary-orange); margin-top: 0; text-align: center; margin-bottom: 15px; }
@@ -35,10 +37,12 @@
         .close-modal:active { transform: scale(0.95); }
         #rules-modal ul { padding-left: 20px; line-height: 1.6; margin-bottom: 0; }
         #rules-modal li { margin-bottom: 10px; font-weight: 700; color: #666; }
+        
         .eval-section { margin-bottom: 15px; background: #FFFBF0; padding: 10px 15px; border-radius: 15px; border-left: 4px solid var(--primary-orange); }
         .eval-section h4 { margin: 0 0 5px 0; color: var(--primary-blue); font-size: 16px; }
         .eval-section p { margin: 0; font-size: 13px; font-weight: 700; color: #666; line-height: 1.5; }
         .eval-highlight { color: var(--primary-orange); }
+        
         .name-input-area { margin-bottom: 15px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         #player-name { padding: 10px 20px; border-radius: 25px; border: 3px solid var(--primary-blue); font-size: 16px; font-weight: 900; text-align: center; color: var(--primary-blue); width: 200px; outline: none; }
         
@@ -50,7 +54,6 @@
         .level-btn.level-hard.active { background: var(--primary-purple); border-color: var(--primary-purple); }
         .level-btn.level-hell.active { background: var(--primary-orange); border-color: var(--primary-orange); }
 
-        /* 新增：順序切換按鈕區塊 */
         .order-container { display: flex; gap: 10px; margin-bottom: 15px; background: #FFF; padding: 5px; border-radius: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 2px solid #E1F5FE;}
         .order-btn { padding: 5px 20px; border-radius: 25px; border: none; background: transparent; color: #888; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.3s; }
         .order-btn.active { background: var(--primary-blue); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -58,10 +61,12 @@
         #info { font-size: 28px; font-weight: 900; color: var(--primary-blue); margin-bottom: 15px; transition: color 0.3s; }
         #info.warning { color: var(--danger-red); animation: pulse 0.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
         #grid-wrapper { background: white; padding: 15px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 5px solid #E1F5FE; margin-bottom: 20px; }
         #grid { display: grid; gap: 10px; grid-template-columns: repeat(3, 65px); grid-template-rows: repeat(3, 65px); }
         .cell { width: 65px; height: 65px; background: #FFF; border: 4px solid var(--primary-yellow); border-radius: 15px; display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: 900; cursor: pointer; transition: 0.1s; }
         .cell.correct { background: var(--primary-green) !important; color: white !important; transform: scale(0.9); border-color: #66BB6A; }
+        
         #start-btn { padding: 15px 40px; font-size: 22px; font-weight: 900; color: white; background: var(--primary-green); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 5px solid #66BB6A; }
     </style>
 </head>
@@ -72,9 +77,9 @@
             <h3>遊戲規則與玩法</h3>
             <ul>
                 <li><strong>限時挑戰：</strong> 在倒數結束前依序點完所有數字！</li>
-                <li><strong>視線集中：</strong> 眼睛盡量注視方格正中心，用餘光搜尋數字。</li>
-                <li><strong>依序點擊：</strong> 按照 1、2、3... 的順序點擊。</li>
-                <li><strong>玩法建議：</strong> 第一種：【單手食指點擊】（推薦給 6~9 歲，或專注力較弱的孩子）；第二種：【雙手大拇指連擊】（推薦給 10~16 歲，或追求極速的高年級生）</li>
+                <li><strong>視線集中：</strong> 眼睛盡量注視方格正中心，用餘光搜尋。</li>
+                <li><strong>雙向挑戰：</strong> 可選擇「正序」由小到大，或「倒序」從大按回小，挑戰逆向思維！</li>
+                <li><strong>最後警告：</strong> 剩下 10 秒時，計時器會變紅跳動喔！</li>
             </ul>
             <button class="close-modal" onclick="toggleRules(false)">我知道了！</button>
         </div>
@@ -145,7 +150,7 @@
         let gridSize = 3, maxNumber = 9, isHellMode = false;
         let initialTime = 15;
         let allLeaderboards = null;
-        let isReverseMode = false; // 新增：判斷是否為倒序模式
+        let isReverseMode = false;
 
         function toggleRules(show) { document.getElementById('rules-modal').style.display = show ? 'flex' : 'none'; }
         function toggleEval(show) { document.getElementById('eval-modal').style.display = show ? 'flex' : 'none'; }
@@ -193,6 +198,15 @@
             document.querySelectorAll('.order-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             isReverseMode = (mode === 'reverse');
+            
+            // --- 新增：強制終止正在進行的遊戲 ---
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('info').classList.remove('warning');
+            document.getElementById('timer').textContent = initialTime.toFixed(2);
+            // ------------------------------------
+
             initGame();
             renderMarquee();
         }
@@ -201,15 +215,19 @@
             document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             isHellMode = (level === 'hell');
-            const infoBox = document.getElementById('info');
-            infoBox.classList.remove('warning');
+            
+            // --- 新增：強制終止正在進行的遊戲 ---
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('info').classList.remove('warning');
+            // ------------------------------------
             
             if (level === 'easy') { gridSize = 3; maxNumber = 9; initialTime = 15; }
             else if (level === 'medium') { gridSize = 4; maxNumber = 16; initialTime = 25; }
             else if (level === 'hard') { gridSize = 5; maxNumber = 25; initialTime = 40; }
             else if (level === 'hell') { gridSize = 5; maxNumber = 25; initialTime = 30; isHellMode = true; }
             
-            // 更新順序按鈕的文字提示
             document.getElementById('btn-normal').textContent = `正序 (1 ➜ ${maxNumber})`;
             document.getElementById('btn-reverse').textContent = `倒序 (${maxNumber} ➜ 1)`;
             
@@ -224,7 +242,6 @@
             grid.innerHTML = '';
             let nums = Array.from({length: maxNumber}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
             
-            // 設定第一顆要找的數字
             nextNumber = isReverseMode ? maxNumber : 1;
             
             nums.forEach(num => {
@@ -241,7 +258,6 @@
                     if (num === nextNumber) {
                         cell.classList.add('correct');
                         
-                        // 根據模式判斷下一個數字
                         if (isReverseMode) {
                             nextNumber--;
                             if (nextNumber < 1) endGame(true);
@@ -260,6 +276,7 @@
             startTime = Date.now();
             document.getElementById('start-btn').disabled = true;
             document.getElementById('info').classList.remove('warning');
+            
             timerInterval = setInterval(() => {
                 const elapsed = (Date.now() - startTime) / 1000;
                 const remaining = initialTime - elapsed;
@@ -299,7 +316,6 @@
                 const timeUsed = (initialTime - parseFloat(document.getElementById('timer').textContent)).toFixed(2);
                 const name = document.getElementById('player-name').value || "匿名玩家";
                 
-                // baseLevel (如 "初級") 用來判斷評級； fullLevelName (如 "初級(倒序)") 用來傳給 GAS 存檔
                 const baseLevel = document.querySelector('.level-btn.active').textContent.split(' ')[0];
                 const fullLevelName = getFullLevelName();
                 const evaluation = getEvaluation(timeUsed, baseLevel);
