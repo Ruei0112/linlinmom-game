@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大腦專注力訓練 - 舒爾特方格</title>
+    <title>林林媽的眼腦大挑戰 - 舒爾特方格</title>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;900&display=swap" rel="stylesheet">
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
@@ -68,6 +68,16 @@
         .cell.correct { background: var(--primary-green) !important; color: white !important; transform: scale(0.9); border-color: #66BB6A; }
         
         #start-btn { padding: 15px 40px; font-size: 22px; font-weight: 900; color: white; background: var(--primary-green); border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-bottom: 5px solid #66BB6A; }
+        
+        /* 新增：免責聲明小字樣式 */
+        .disclaimer-text {
+            margin-top: 15px;
+            margin-bottom: 25px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #BCAAA4;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +150,8 @@
     <div id="grid-wrapper"><div id="grid"></div></div>
 
     <button id="start-btn" onclick="startGame()">開始挑戰！</button>
+    
+    <div class="disclaimer-text">非專業評估 僅供娛樂測試</div>
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbywKvXLB3tELoxhzyFmAbrI4pE2xhWdnkPE18FB7McvbM-YyXL-ALHeF2K2fm86DM5d/exec"; 
@@ -199,13 +211,11 @@
             btn.classList.add('active');
             isReverseMode = (mode === 'reverse');
             
-            // --- 新增：強制終止正在進行的遊戲 ---
             clearInterval(timerInterval);
             isRunning = false;
             document.getElementById('start-btn').disabled = false;
             document.getElementById('info').classList.remove('warning');
             document.getElementById('timer').textContent = initialTime.toFixed(2);
-            // ------------------------------------
 
             initGame();
             renderMarquee();
@@ -216,12 +226,10 @@
             btn.classList.add('active');
             isHellMode = (level === 'hell');
             
-            // --- 新增：強制終止正在進行的遊戲 ---
             clearInterval(timerInterval);
             isRunning = false;
             document.getElementById('start-btn').disabled = false;
             document.getElementById('info').classList.remove('warning');
-            // ------------------------------------
             
             if (level === 'easy') { gridSize = 3; maxNumber = 9; initialTime = 15; }
             else if (level === 'medium') { gridSize = 4; maxNumber = 16; initialTime = 25; }
